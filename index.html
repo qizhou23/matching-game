@@ -16,20 +16,22 @@
             <h1>Matching Game</h1>
         </header>
 
+        <!-- 计分板 -->
         <section class="score-panel">
         	<ul class="stars">
         		<li><i class="fa fa-star"></i></li>
         		<li><i class="fa fa-star"></i></li>
         		<li><i class="fa fa-star"></i></li>
         	</ul>
-
+            <!-- 移动次数 -->
         	<span class="moves">3</span> Moves
-
+            <!-- 重新开局 -->
             <div class="restart">
         		<i class="fa fa-repeat"></i>
         	</div>
         </section>
-
+        <!-- 放置所有卡片的版面 -->
+        <!-- 所有卡片的class分为三种：'card'-未开启的卡牌，'card open show'-打开没有匹配的卡牌，'card '-打开并匹配的卡牌 -->
         <ul class="deck">
             <li class="card">
                 <i class="fa fa-diamond"></i>
