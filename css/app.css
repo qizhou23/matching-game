@@ -81,6 +81,11 @@ h1 {
     font-size: 33px;
 }
 
+.deck .card.fail {
+    background: #ff0000;
+    cursor: default;
+    font-size: 33px;
+}
 /*
  * Styles for the Score Panel
  */
@@ -106,4 +111,8 @@ h1 {
 .score-panel .restart {
     float: right;
     cursor: pointer;
+}
+
+.back {
+	transform: rotateY(180deg);
 }
