@@ -27,7 +27,7 @@ window.onload = shuffle(cards);
 
 // 初始化卡牌外表以及星星数以及计分板
 function initialise(){
-    console.log("正常启动");
+    // console.log("正常启动");
     // 初始化所有卡牌的外表
     for(var i=0;i<cards.length;i++){
         cards[i].className = "card";
@@ -54,9 +54,18 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-
-    return array;
+    // 对cards这个数组进行了乱序排列
+    
+    // 1.清空数据
+    // 2.重新导入新的乱序后的数组
+    deck.innerHTML = "";
+    for(var i=0;i<array.length;i++){
+        deck.appendChild(array[i]);
+    }
 }
+
+
+
 
 
 /*
@@ -70,11 +79,14 @@ function shuffle(array) {
  *    + 如果所有卡都匹配，则显示带有最终分数的消息（将这个功能放在你从这个函数中调用的另一个函数中）
  */
 
+
+
+
 //  事件委托
 EventUtil.addHandler(deck,"click",function(event){
     event = EventUtil.getEvent(event);
     var target = EventUtil.getTarget(event);
-    console.log(typeof(moves.innerHTML));
+    // console.log(typeof(moves.innerHTML));
     moves.innerHTML = Number(moves.innerHTML) + 1;
     // 将行动数传给小星星函数
     star(moves.innerHTML);
@@ -87,34 +99,44 @@ EventUtil.addHandler(deck,"click",function(event){
         default:{
             break;
         }
-        
-
     }
 });
 
-
+//  如果所有的类名都变成了card match ,则游戏结束
+var over=0;
+for(var i=0;i<cards.length;i++){
+    if(cards[i].className == "card match"){
+        over += 1;
+    }
+    if(over == cards.length){
+        alert("你赢了！");
+    }
+}
 
  /*
   *当卡片呈现打开状态时
   *
   */
 function haveOpened(ele){
-    var li=ele.getElementsByTagName("i");
-    console.log(typeof(li)); //object
-    console.log(li.className);//undefined?
+    ele.className += " animated jello";
+    var li=ele.getElementsByTagName("i")[0];
+    // console.log(typeof(li)); //object
+    // console.log(li.className);//undefined?
     if(opened == " "){
-        opened += li.className;
+        opened = li.className;
         lastEle = ele;
     }else if(opened == li.className){
         // 匹配成功
-        console.log("匹配上了");
+        // console.log("匹配上了");
         // 将卡面转换为匹配成功的样式
         setTimeout(function(){
             ele.className = "card match";
-            lastEle.className = "card match";},400);
-        lastEle = ' ';
+            lastEle.className = "card match";
+            lastEle = ' ';
+        },400);
+        opened = " ";
     }else {
-        console.log("匹配失败");
+        // console.log("匹配失败");
         // console.log(opened + li.className);
         opened = " ";
         ele.className = "card fail";
@@ -122,15 +144,14 @@ function haveOpened(ele){
         setTimeout(function(){
             ele.className = "card";
             lastEle.className = "card";},300);
-    }
-    console.log(opened);   
+    }  
  } 
 
 
 // 星星函数
 function star(moveStr) {
     var move = Number(moveStr);
-    console.log(move);
+    // console.log(move);
     if(move <=20){
         return;
     }else if(move < 30){
