@@ -16,6 +16,9 @@ var stars = document.querySelector(".stars").getElementsByTagName("li");
 // 创建对象控制重新开局
 var restart = document.querySelector(".restart");
 restart.onclick = initialise;
+// 获取计时器
+var timeR = document.querySelector(".timeR");
+var time = window.setInterval(timeRecord,1000);
 
 /*
  * 显示页面上的卡片
@@ -36,8 +39,13 @@ function initialise(){
     stars[0].className = "fa fa-star";
     stars[1].className = "fa fa-star";
     stars[2].className = "fa fa-star";
+    console.log(stars.length);
     // 初始化移动数
     moves.innerHTML = "0";
+    over = 0;
+    // 初始化计时器
+    timeR.innerHTML = "0";
+    second = minute = 0;
 }
 
 // 洗牌函数来自于 http://stackoverflow.com/a/2450976
@@ -79,7 +87,7 @@ function shuffle(array) {
  *    + 如果所有卡都匹配，则显示带有最终分数的消息（将这个功能放在你从这个函数中调用的另一个函数中）
  */
 
-
+var over=0; //结束
 
 
 //  事件委托
@@ -100,18 +108,10 @@ EventUtil.addHandler(deck,"click",function(event){
             break;
         }
     }
+
 });
 
-//  如果所有的类名都变成了card match ,则游戏结束
-var over=0;
-for(var i=0;i<cards.length;i++){
-    if(cards[i].className == "card match"){
-        over += 1;
-    }
-    if(over == cards.length){
-        alert("你赢了！");
-    }
-}
+
 
  /*
   *当卡片呈现打开状态时
@@ -134,6 +134,7 @@ function haveOpened(ele){
             lastEle.className = "card match";
             lastEle = ' ';
         },400);
+        over += 2;
         opened = " ";
     }else {
         // console.log("匹配失败");
@@ -144,7 +145,22 @@ function haveOpened(ele){
         setTimeout(function(){
             ele.className = "card";
             lastEle.className = "card";},300);
-    }  
+    }
+    //  如果over = 卡片长度 ,则游戏结束
+    console.log(over);
+    if(over == cards.length){
+        var starsNum = 0;
+        for(var i=0;i<stars.length;i++){
+            if(stars[i].className == "fa fa-star") starsNum+=1;
+        }
+        console.log(starsNum);
+        alert("你赢了！\n本次游戏你花费了"+timeR.innerHTML+",最终星级为" + starsNum + "颗星！");
+        if(confirm("是否要再来一局？")){
+            shuffle(cards);
+        }else{
+            return;
+        }
+    }
  } 
 
 
@@ -152,9 +168,9 @@ function haveOpened(ele){
 function star(moveStr) {
     var move = Number(moveStr);
     // console.log(move);
-    if(move <=20){
+    if(move <=30){
         return;
-    }else if(move < 30){
+    }else if(move < 40){
         stars[2].className = " ";
     }else {
         stars[1].className = " ";
@@ -162,3 +178,14 @@ function star(moveStr) {
     }
 }
 
+// 计时器函数
+var second = minute = 0;
+// console.log(second,minute);
+function timeRecord(){
+    second += 1;
+    if(second >= 60){
+        minute += 1;
+        second = 0;
+    }
+    timeR.innerHTML = minute + "分" + second + "秒";
+}
