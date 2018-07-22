@@ -18,7 +18,7 @@ var restart = document.querySelector(".restart");
 restart.onclick = initialise;
 // 获取计时器
 var timeR = document.querySelector(".timeR");
-var time = window.setInterval(timeRecord,1000);
+var time;
 
 /*
  * 显示页面上的卡片
@@ -36,10 +36,10 @@ function initialise(){
         cards[i].className = "card";
     }
     // 初始化星星数
-    stars[0].className = "fa fa-star";
-    stars[1].className = "fa fa-star";
-    stars[2].className = "fa fa-star";
-    console.log(stars.length);
+    for(var i=0;i<stars.length;i++){
+        stars[i].className = "fa fa-star";
+    }
+    // console.log(stars.length);
     // 初始化移动数
     moves.innerHTML = "0";
     over = 0;
@@ -47,12 +47,11 @@ function initialise(){
     timeR.innerHTML = "0";
     second = minute = 0;
 }
-
+ 
 // 洗牌函数来自于 http://stackoverflow.com/a/2450976
 function shuffle(array) {
     initialise();
     var currentIndex = array.length, temporaryValue, randomIndex;
-
     while (currentIndex !== 0) {
         // Math.random将返回一个等于0小于1的随机数
         // 通过Math.random() * 可能值的总数（在这里等于数组的长度）来达到在范围里随机取数的目的
@@ -63,7 +62,6 @@ function shuffle(array) {
         array[randomIndex] = temporaryValue;
     }
     // 对cards这个数组进行了乱序排列
-    
     // 1.清空数据
     // 2.重新导入新的乱序后的数组
     deck.innerHTML = "";
@@ -95,15 +93,19 @@ EventUtil.addHandler(deck,"click",function(event){
     event = EventUtil.getEvent(event);
     var target = EventUtil.getTarget(event);
     // console.log(typeof(moves.innerHTML));
-    moves.innerHTML = Number(moves.innerHTML) + 1;
+    // 如果是初次点击，开始计时器
+    if(moves.innerHTML == 0){
+        time = window.setInterval(timeRecord,1000);
+    }
     // 将行动数传给小星星函数
     star(moves.innerHTML);
     switch(target.className){
         case "card": {
+            moves.innerHTML = Number(moves.innerHTML) + 1;
             target.className = "card open show";
             haveOpened(target);
             break;
-            }
+        }
         default:{
             break;
         }
@@ -120,25 +122,18 @@ EventUtil.addHandler(deck,"click",function(event){
 function haveOpened(ele){
     ele.className += " animated jello";
     var li=ele.getElementsByTagName("i")[0];
-    // console.log(typeof(li)); //object
-    // console.log(li.className);//undefined?
     if(opened == " "){
         opened = li.className;
         lastEle = ele;
     }else if(opened == li.className){
         // 匹配成功
-        // console.log("匹配上了");
-        // 将卡面转换为匹配成功的样式
-        setTimeout(function(){
-            ele.className = "card match";
-            lastEle.className = "card match";
-            lastEle = ' ';
-        },400);
+        ele.className = "card match pulse animated";
+        lastEle.className = "card match pulse animated";
+        lastEle = ' ';
         over += 2;
         opened = " ";
     }else {
         // console.log("匹配失败");
-        // console.log(opened + li.className);
         opened = " ";
         ele.className = "card fail";
         lastEle.className = "card fail";
